@@ -2251,3 +2251,1196 @@ Week 4（复盘）：
 ---
 
 *第9轮学习完成 - 2026-03-09*
+
+---
+
+## 第5轮：数据采集与清洗技术
+
+**学习时间**：2026-03-09 16:52 (Asia/Shanghai)
+
+### 1. 数据采集方法
+
+#### 公开数据源爬取
+
+**常见公开数据源**
+```
+企业信息：
+- 工商信息网站（天眼查、企查查、启信宝）
+- 企业官网（关于我们、团队、新闻）
+- 招聘网站（BOSS直聘、拉勾、猎聘）
+- 政府公开数据（国家企业信用信息公示系统）
+
+社交媒体：
+- LinkedIn（公司页、个人主页）
+- 微博、公众号、知乎
+- 行业社区（V2EX、掘金）
+
+行业数据：
+- 行业协会网站
+- 研究机构报告
+- 新闻媒体
+- 展会/会议参会名单
+```
+
+**爬取技术栈**
+```
+基础工具：
+- curl/wget：简单页面抓取
+- pup/jq：命令行 HTML/JSON 解析
+- Python + requests：灵活的 HTTP 请求
+
+浏览器自动化：
+- Playwright/Puppeteer：JavaScript 渲染页面
+- OpenClaw browser tool：内置浏览器控制
+
+解析工具：
+- BeautifulSoup：HTML 解析
+- XPath/CSS 选择器
+- 正则表达式
+
+反爬策略应对：
+- 请求频率控制
+- User-Agent 轮换
+- 代理 IP 池
+- Cookie/Session 管理
+- 验证码识别（OCR/打码平台）
+```
+
+**爬取最佳实践**
+```
+合规原则：
+- 遵守 robots.txt
+- 控制请求频率（避免影响目标服务器）
+- 不爬取敏感个人信息
+- 尊重版权
+
+技术建议：
+- 设置合理的超时和重试
+- 异常处理和日志记录
+- 增量爬取（避免重复）
+- 数据校验（确保完整性）
+```
+
+#### API 接入
+
+**拓客相关 API**
+```
+企业信息 API：
+- 天眼查开放平台：企业工商、司法、知识产权
+- 企查查 API：企业基础信息、关联关系
+- ZoomInfo：海外企业数据
+- Crunchbase：创业公司、融资信息
+
+社交数据 API：
+- LinkedIn API：需合作伙伴资质
+- 微信开放平台：公众号数据
+- 微博 API：需企业认证
+
+联系方式验证 API：
+- Hunter.io：邮箱验证
+- NeverBounce：邮箱有效性检测
+- 号码归属地查询
+
+地理/位置 API：
+- 高德/百度地图 API
+- IP 地理位置查询
+```
+
+**API 集成模式**
+```
+RESTful API：
+```bash
+# 示例：天眼查企业搜索
+curl -X GET "https://open.api.tianyancha.com/services/open/search/2.0" \
+  -H "Authorization: API-KEY" \
+  -d "keyword=科技公司" \
+  -d "pageNum=1"
+```
+
+分页处理：
+```python
+def fetch_all_pages(api_func, page_size=50):
+    results = []
+    page = 1
+    while True:
+        data = api_func(page=page, pageSize=page_size)
+        if not data['items']:
+            break
+        results.extend(data['items'])
+        page += 1
+    return results
+```
+
+限流处理：
+```python
+import time
+from functools import wraps
+
+def rate_limit(calls_per_second):
+    min_interval = 1.0 / calls_per_second
+    def decorator(func):
+        last_called = [0.0]
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            elapsed = time.time() - last_called[0]
+            if elapsed < min_interval:
+                time.sleep(min_interval - elapsed)
+            result = func(*args, **kwargs)
+            last_called[0] = time.time()
+            return result
+        return wrapper
+    return decorator
+```
+
+**API 管理**
+```
+API Key 管理：
+- 环境变量存储（不提交代码库）
+- 定期轮换密钥
+- 权限最小化
+
+调用监控：
+- 成功率追踪
+- 响应时间监控
+- 配额使用情况
+- 异常告警
+
+成本控制：
+- 选择合适的价格套餐
+- 缓存重复请求结果
+- 批量请求优化
+```
+
+#### 用户贡献数据
+
+**数据收集场景**
+```
+主动提交：
+- 网站表单（咨询、试用申请）
+- 活动报名（Webinar、线下活动）
+- 内容下载（白皮书、案例）
+- 问卷调查
+
+被动收集：
+- 网站访问行为（Cookie、追踪像素）
+- 邮件互动（打开、点击）
+- 社交互动（点赞、评论、转发）
+- 客服对话
+
+交易数据：
+- 订单信息
+- 支付记录
+- 产品使用数据
+```
+
+**数据收集最佳实践**
+```
+表单设计：
+- 字段精简（只收集必要信息）
+- 分步表单（降低心理负担）
+- 智能默认值
+- 实时验证
+
+隐私合规：
+- 明确告知用途
+- 获取必要同意
+- 提供退出机制
+- 数据保护措施
+
+激励机制：
+- 内容换取（下载报告需填信息）
+- 积分/奖励
+- 专属服务
+- 会员特权
+```
+
+#### 合作伙伴数据
+
+**数据共享模式**
+```
+战略合作：
+- 上下游企业数据共享
+- 互补产品客户交叉推荐
+- 联合营销活动数据
+
+数据采购：
+- 第三方数据服务商
+- 行业数据库订阅
+- 联系方式采购（合规前提下）
+
+平台数据：
+- 电商平台客户数据
+- 广告平台转化数据
+- CRM 系统集成
+```
+
+**数据合作注意事项**
+```
+合规审查：
+- 数据来源合法性
+- 使用范围限制
+- 用户授权情况
+- 跨境传输合规
+
+数据质量评估：
+- 准确性验证
+- 时效性检查
+- 覆盖范围
+- 更新频率
+
+合作协议：
+- 明确数据用途
+- 知识产权归属
+- 保密条款
+- 违约责任
+```
+
+---
+
+### 2. 数据清洗流程
+
+#### 去重逻辑
+
+**去重维度**
+```
+企业级去重：
+- 统一社会信用代码（最可靠）
+- 企业全称（注意工商变更）
+- 域名/官网
+- 电话号码（企业总机）
+
+联系人级去重：
+- 手机号（主要标识）
+- 邮箱地址
+- 姓名+公司组合
+- LinkedIn ID
+
+行为级去重：
+- 同一事件不重复记录
+- 设备ID+事件类型+时间窗口
+```
+
+**去重算法**
+```python
+# 简单去重
+def dedupe_simple(records, key_field):
+    seen = set()
+    result = []
+    for record in records:
+        key = record.get(key_field)
+        if key and key not in seen:
+            seen.add(key)
+            result.append(record)
+    return result
+
+# 模糊匹配去重（企业名称）
+from difflib import SequenceMatcher
+
+def similar(a, b, threshold=0.85):
+    return SequenceMatcher(None, a, b).ratio() > threshold
+
+def dedupe_fuzzy(companies):
+    result = []
+    for company in companies:
+        is_dup = False
+        for existing in result:
+            if similar(company['name'], existing['name']):
+                is_dup = True
+                break
+        if not is_dup:
+            result.append(company)
+    return result
+
+# 合并重复记录
+def merge_records(records):
+    merged = {}
+    for record in records:
+        key = record['id']
+        if key in merged:
+            # 合并字段，保留最新/最完整的
+            for k, v in record.items():
+                if v and (k not in merged[key] or not merged[key][k]):
+                    merged[key][k] = v
+        else:
+            merged[key] = record
+    return list(merged.values())
+```
+
+**去重策略**
+```
+实时去重：
+- 新数据入库前检查
+- 数据库唯一索引
+- 缓存已存在记录
+
+批量去重：
+- 定期全量清洗
+- 跨数据源合并
+- 历史数据处理
+
+增量去重：
+- 每日新增数据处理
+- 与现有库比对
+- 标记新增/更新
+```
+
+#### 数据标准化
+
+**字段标准化**
+```
+公司名称：
+- 去除常见后缀（有限公司、股份有限公司）
+- 统一大小写
+- 处理简称/全称
+
+例：
+"阿里巴巴网络技术有限公司" → "阿里巴巴"
+"阿里巴巴" → "阿里巴巴"
+"ALIBABA" → "阿里巴巴"
+
+联系方式：
+- 手机号：去掉+86、空格、横线
+- 邮箱：统一小写
+- 座机：标准化区号格式
+
+例：
+"+86 138-1234-5678" → "13812345678"
+"  TEST@Example.COM  " → "test@example.com"
+"010-12345678" → "010-12345678"
+
+地址：
+- 省市区标准化
+- 地址分词
+- 地理编码
+
+行业分类：
+- 统一到标准行业代码
+- 处理交叉行业
+```
+
+**标准化工具**
+```python
+# 公司名称标准化
+import re
+
+def normalize_company_name(name):
+    # 去除常见后缀
+    suffixes = [
+        r'有限公司$', r'股份有限公司$', r'有限责任公司$',
+        r'集团$', r'公司$', r'Co\.?Ltd\.?$', r'Inc\.?$'
+    ]
+    for suffix in suffixes:
+        name = re.sub(suffix, '', name, flags=re.IGNORECASE)
+
+    # 去除空格和特殊字符
+    name = re.sub(r'\s+', '', name)
+
+    # 统一大小写（中文保持原样）
+    if name.isascii():
+        name = name.title()
+
+    return name.strip()
+
+# 手机号标准化
+def normalize_phone(phone):
+    # 去除非数字字符
+    digits = re.sub(r'\D', '', phone)
+
+    # 去除中国区号
+    if digits.startswith('86') and len(digits) == 13:
+        digits = digits[2:]
+
+    # 验证格式
+    if len(digits) == 11 and digits.startswith('1'):
+        return digits
+    return None  # 无效号码
+
+# 邮箱标准化
+def normalize_email(email):
+    # 去除空格，转小写
+    email = email.strip().lower()
+
+    # 基本格式验证
+    if re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+        return email
+    return None
+```
+
+**枚举值映射**
+```python
+# 行业标准化映射
+INDUSTRY_MAPPING = {
+    # 互联网
+    '互联网': 'IT/互联网',
+    'IT': 'IT/互联网',
+    '软件': 'IT/互联网',
+    'SaaS': 'IT/互联网',
+
+    # 金融
+    '金融': '金融',
+    '银行': '金融',
+    '保险': '金融',
+    '投资': '金融',
+
+    # 制造业
+    '制造': '制造业',
+    '工厂': '制造业',
+    '生产': '制造业',
+
+    # ... 更多映射
+}
+
+def normalize_industry(raw_industry):
+    for keyword, standard in INDUSTRY_MAPPING.items():
+        if keyword in raw_industry:
+            return standard
+    return '其他'
+```
+
+#### 实时性保证
+
+**数据时效性管理**
+```
+时效性分级：
+- 联系方式：3-6 个月（人员变动）
+- 公司基本信息：6-12 个月（工商变更）
+- 经营状态：1-3 个月（动态变化）
+- 新闻动态：实时-7 天
+
+更新策略：
+- 高价值数据：高频更新
+- 静态数据：按需更新
+- 动态数据：实时/准实时
+
+过期处理：
+- 标记过期时间
+- 超期降权/隐藏
+- 自动重新验证
+```
+
+**增量更新机制**
+```python
+# 增量更新检测
+def detect_changes(old_record, new_record, fields_to_compare):
+    changes = {}
+    for field in fields_to_compare:
+        old_val = old_record.get(field)
+        new_val = new_record.get(field)
+        if old_val != new_val:
+            changes[field] = {
+                'old': old_val,
+                'new': new_val
+            }
+    return changes
+
+# 基于时间戳的增量
+def fetch_incremental(last_sync_time):
+    """只获取上次同步后的更新"""
+    return api_call(
+        updated_after=last_sync_time
+    )
+
+# 变更日志
+def log_change(record_id, field, old_value, new_value):
+    change_log.append({
+        'record_id': record_id,
+        'field': field,
+        'old_value': old_value,
+        'new_value': new_value,
+        'changed_at': datetime.now()
+    })
+```
+
+**实时验证**
+```python
+# 联系方式实时验证
+async def validate_contact(phone=None, email=None):
+    results = {}
+
+    if phone:
+        # 发送验证短信/拨打测试
+        results['phone_valid'] = await verify_phone(phone)
+
+    if email:
+        # SMTP 探测
+        results['email_valid'] = await verify_email_smtp(email)
+
+    return results
+
+# 邮箱 SMTP 验证
+async def verify_email_smtp(email):
+    domain = email.split('@')[1]
+
+    # 查询 MX 记录
+    import dns.resolver
+    try:
+        mx_records = dns.resolver.resolve(domain, 'MX')
+        mx_host = str(mx_records[0].exchange)
+
+        # SMTP 探测
+        # 注意：实际实现需要更复杂的逻辑
+        return True
+    except:
+        return False
+```
+
+#### 质量评估
+
+**数据质量维度**
+```
+完整性（Completeness）：
+- 必填字段填充率
+- 关键信息缺失率
+- 整体完整度评分
+
+准确性（Accuracy）：
+- 与真实值对比
+- 验证通过率
+- 错误类型分布
+
+一致性（Consistency）：
+- 跨字段逻辑一致性
+- 跨数据源一致性
+- 格式统一性
+
+时效性（Timeliness）：
+- 数据更新频率
+- 平均数据年龄
+- 过期数据比例
+
+唯一性（Uniqueness）：
+- 重复记录比例
+- 主键唯一性
+```
+
+**质量评分模型**
+```python
+def calculate_quality_score(record):
+    score = 0
+    max_score = 100
+
+    # 完整性（40分）
+    required_fields = ['company_name', 'contact_name', 'phone', 'email']
+    filled = sum(1 for f in required_fields if record.get(f))
+    completeness_score = (filled / len(required_fields)) * 40
+    score += completeness_score
+
+    # 准确性（30分）
+    accuracy_score = 0
+    if record.get('phone') and is_valid_phone(record['phone']):
+        accuracy_score += 10
+    if record.get('email') and is_valid_email(record['email']):
+        accuracy_score += 10
+    if record.get('credit_code') and verify_credit_code(record['credit_code']):
+        accuracy_score += 10
+    score += accuracy_score
+
+    # 时效性（20分）
+    days_since_update = (datetime.now() - record['updated_at']).days
+    if days_since_update <= 30:
+        timeliness_score = 20
+    elif days_since_update <= 90:
+        timeliness_score = 15
+    elif days_since_update <= 180:
+        timeliness_score = 10
+    else:
+        timeliness_score = 5
+    score += timeliness_score
+
+    # 一致性（10分）
+    consistency_score = 10  # 基础分，发现不一致扣分
+    if record.get('city') and record.get('province'):
+        if not is_city_in_province(record['city'], record['province']):
+            consistency_score -= 5
+    score += consistency_score
+
+    return {
+        'total': score,
+        'completeness': completeness_score,
+        'accuracy': accuracy_score,
+        'timeliness': timeliness_score,
+        'consistency': consistency_score
+    }
+```
+
+**质量监控报表**
+```
+每日质量报告：
+- 新增数据质量分布
+- 验证失败统计
+- 异常数据预警
+
+每周质量趋势：
+- 各维度质量趋势
+- 质量改善/恶化原因
+- 清洗效果评估
+
+每月质量审计：
+- 全量数据质量抽检
+- 数据源质量对比
+- 清洗规则优化建议
+```
+
+---
+
+### 3. 技术架构
+
+#### 分布式爬虫
+
+**架构设计**
+```
+基本架构：
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   调度器    │ ──→ │   爬虫节点  │ ──→ │   存储层    │
+│  Scheduler  │     │   Crawlers  │     │   Storage   │
+└─────────────┘     └─────────────┘     └─────────────┘
+       ↑                   │                   │
+       │                   ↓                   ↓
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   URL队列   │ ←── │   代理池    │     │   数据处理  │
+│URL Queue   │     │  Proxy Pool │     │  Processing │
+└─────────────┘     └─────────────┘     └─────────────┘
+```
+
+**分布式爬虫框架**
+```python
+# 基于 Redis 的分布式 URL 队列
+import redis
+from urllib.parse import urlparse
+
+class DistributedQueue:
+    def __init__(self, redis_url='redis://localhost:6379'):
+        self.redis = redis.from_url(redis_url)
+        self.queue_key = 'crawl:queue'
+        self.seen_key = 'crawl:seen'
+
+    def add_url(self, url, priority=0):
+        """添加 URL 到队列"""
+        url_hash = hashlib.md5(url.encode()).hexdigest()
+
+        # 检查是否已处理
+        if self.redis.sismember(self.seen_key, url_hash):
+            return False
+
+        # 添加到队列
+        self.redis.zadd(self.queue_key, {url: priority})
+        return True
+
+    def get_url(self):
+        """获取下一个 URL"""
+        result = self.redis.zpopmax(self.queue_key)
+        if result:
+            return result[0][0].decode()
+        return None
+
+    def mark_done(self, url):
+        """标记 URL 已处理"""
+        url_hash = hashlib.md5(url.encode()).hexdigest()
+        self.redis.sadd(self.seen_key, url_hash)
+```
+
+**爬虫节点实现**
+```python
+# 爬虫工作节点
+import asyncio
+from playwright.async_api import async_playwright
+
+class CrawlerWorker:
+    def __init__(self, queue, proxy_pool):
+        self.queue = queue
+        self.proxy_pool = proxy_pool
+
+    async def run(self):
+        while True:
+            url = self.queue.get_url()
+            if not url:
+                await asyncio.sleep(5)
+                continue
+
+            proxy = self.proxy_pool.get_proxy()
+
+            try:
+                result = await self.crawl(url, proxy)
+                await self.process_result(result)
+                self.queue.mark_done(url)
+            except Exception as e:
+                logging.error(f"Crawl failed: {url}, {e}")
+                # 代理可能被封，移除
+                self.proxy_pool.remove_proxy(proxy)
+
+    async def crawl(self, url, proxy=None):
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(
+                proxy={'server': proxy} if proxy else None
+            )
+            page = await browser.new_page()
+            await page.goto(url)
+            content = await page.content()
+            await browser.close()
+            return content
+```
+
+**代理池管理**
+```python
+class ProxyPool:
+    def __init__(self):
+        self.proxies = []
+        self.proxy_stats = {}  # 代理成功率统计
+
+    def add_proxy(self, proxy):
+        self.proxies.append(proxy)
+        self.proxy_stats[proxy] = {'success': 0, 'fail': 0}
+
+    def get_proxy(self):
+        """根据成功率选择代理"""
+        if not self.proxies:
+            return None
+
+        # 按成功率排序
+        sorted_proxies = sorted(
+            self.proxies,
+            key=lambda p: self._success_rate(p),
+            reverse=True
+        )
+        return sorted_proxies[0]
+
+    def _success_rate(self, proxy):
+        stats = self.proxy_stats.get(proxy, {'success': 0, 'fail': 0})
+        total = stats['success'] + stats['fail']
+        if total == 0:
+            return 0.5
+        return stats['success'] / total
+
+    def report_success(self, proxy):
+        self.proxy_stats[proxy]['success'] += 1
+
+    def report_fail(self, proxy):
+        self.proxy_stats[proxy]['fail'] += 1
+        # 失败率过高则移除
+        if self._success_rate(proxy) < 0.3:
+            self.remove_proxy(proxy)
+
+    def remove_proxy(self, proxy):
+        if proxy in self.proxies:
+            self.proxies.remove(proxy)
+```
+
+#### 增量更新
+
+**增量更新策略**
+```
+基于时间戳：
+- 记录每个数据的 last_updated
+- 只拉取 last_updated > 上次同步时间 的数据
+
+基于版本号：
+- 数据每次更新版本号递增
+- 记录已同步的最大版本号
+
+基于日志：
+- 数据源提供变更日志（CDC）
+- 解析日志获取增量
+
+基于哈希：
+- 计算数据内容哈希
+- 对比哈希检测变化
+```
+
+**增量更新实现**
+```python
+class IncrementalUpdater:
+    def __init__(self, db):
+        self.db = db
+        self.checkpoint_key = 'last_sync_timestamp'
+
+    def sync(self, data_source):
+        # 获取上次同步时间
+        last_sync = self.db.get(self.checkpoint_key) or 0
+        current_time = time.time()
+
+        # 获取增量数据
+        incremental_data = data_source.fetch_updated(since=last_sync)
+
+        # 处理增量
+        for record in incremental_data:
+            existing = self.db.get(record['id'])
+
+            if existing:
+                # 更新
+                changes = self._merge(existing, record)
+                if changes:
+                    self.db.update(record['id'], record)
+                    self._log_change(record['id'], changes)
+            else:
+                # 新增
+                self.db.insert(record)
+
+        # 更新检查点
+        self.db.set(self.checkpoint_key, current_time)
+
+        return {
+            'new': len([r for r in incremental_data if not self.db.get(r['id'])]),
+            'updated': len([r for r in incremental_data if self.db.get(r['id'])])
+        }
+
+    def _merge(self, existing, new):
+        """合并数据，返回变化的字段"""
+        changes = {}
+        for key, new_val in new.items():
+            old_val = existing.get(key)
+            if old_val != new_val and new_val is not None:
+                changes[key] = {'old': old_val, 'new': new_val}
+        return changes
+```
+
+**变更检测与通知**
+```python
+class ChangeDetector:
+    def __init__(self, rules):
+        self.rules = rules  # 监控规则
+
+    def detect(self, old_record, new_record):
+        changes = []
+
+        for rule in self.rules:
+            field = rule['field']
+            old_val = old_record.get(field)
+            new_val = new_record.get(field)
+
+            if old_val != new_val:
+                change = {
+                    'type': rule.get('type', 'update'),
+                    'field': field,
+                    'old': old_val,
+                    'new': new_val,
+                    'severity': rule.get('severity', 'info')
+                }
+                changes.append(change)
+
+                # 触发通知
+                if rule.get('notify'):
+                    self._notify(rule['notify'], change)
+
+        return changes
+
+    def _notify(self, notify_config, change):
+        """发送变更通知"""
+        # 可集成到 OpenClaw message tool
+        message = f"数据变更：{change['field']} 从 {change['old']} 变为 {change['new']}"
+        # message(action='send', channel='telegram', message=message)
+```
+
+#### 数据管道
+
+**ETL 管道设计**
+```
+管道流程：
+[Extract] → [Transform] → [Validate] → [Load] → [Monitor]
+    │            │            │           │          │
+    ↓            ↓            ↓           ↓          ↓
+ 数据采集     清洗转换      质量检查    入库存储    监控告警
+```
+
+**管道实现**
+```python
+from dataclasses import dataclass
+from typing import Callable, List
+
+@dataclass
+class PipelineStep:
+    name: str
+    processor: Callable
+    on_error: str = 'skip'  # skip, stop, retry
+
+class DataPipeline:
+    def __init__(self):
+        self.steps: List[PipelineStep] = []
+        self.metrics = {
+            'processed': 0,
+            'success': 0,
+            'failed': 0,
+            'errors': []
+        }
+
+    def add_step(self, name: str, processor: Callable, on_error='skip'):
+        self.steps.append(PipelineStep(name, processor, on_error))
+        return self
+
+    async def execute(self, data):
+        result = data
+
+        for step in self.steps:
+            try:
+                result = await step.processor(result) if asyncio.iscoroutinefunction(step.processor) else step.processor(result)
+                self.metrics['processed'] += 1
+
+            except Exception as e:
+                self.metrics['failed'] += 1
+                self.metrics['errors'].append({
+                    'step': step.name,
+                    'error': str(e),
+                    'data': result
+                })
+
+                if step.on_error == 'stop':
+                    raise
+                elif step.on_error == 'skip':
+                    continue
+                elif step.on_error == 'retry':
+                    # 简单重试逻辑
+                    for _ in range(3):
+                        try:
+                            result = step.processor(result)
+                            break
+                        except:
+                            pass
+
+        self.metrics['success'] += 1
+        return result
+
+# 使用示例
+pipeline = DataPipeline()
+pipeline.add_step('normalize_name', normalize_company_name)
+pipeline.add_step('validate_phone', validate_phone, on_error='skip')
+pipeline.add_step('deduplicate', dedupe_check)
+pipeline.add_step('enrich', enrich_company_data)
+
+result = await pipeline.execute(raw_data)
+```
+
+**流式处理**
+```python
+# 基于 Kafka/Redis Stream 的流式处理
+import asyncio
+
+class StreamProcessor:
+    def __init__(self, stream_name, consumer_group):
+        self.stream_name = stream_name
+        self.consumer_group = consumer_group
+        self.redis = redis.Redis()
+
+    async def process_stream(self, handler):
+        """持续处理流数据"""
+        while True:
+            # 读取消息
+            messages = self.redis.xreadgroup(
+                self.consumer_group,
+                'consumer-1',
+                {self.stream_name: '>'},
+                count=10,
+                block=5000
+            )
+
+            for stream, msgs in messages:
+                for msg_id, data in msgs:
+                    try:
+                        # 处理消息
+                        await handler(data)
+                        # 确认处理完成
+                        self.redis.xack(self.stream_name, self.consumer_group, msg_id)
+                    except Exception as e:
+                        logging.error(f"处理失败: {e}")
+                        # 消息会保持 pending 状态
+
+            await asyncio.sleep(0.1)
+```
+
+---
+
+### 4. OpenClaw 可实现性
+
+#### 可在 OpenClaw 中实现的功能
+
+| 功能 | OpenClaw 工具 | 实现方式 |
+|-----|--------------|---------|
+| 网页抓取 | exec, browser | curl/Playwright 抓取页面 |
+| HTML 解析 | exec | pup, jq, Python 脚本 |
+| API 调用 | exec | curl 调用外部 API |
+| 浏览器自动化 | browser | 处理 JS 渲染、登录、表单 |
+| 数据存储 | read/write | JSON/Markdown 文件 |
+| 定时采集 | cron | 定时任务触发 |
+| 子任务分发 | sessions_spawn | 启动多个采集子 Agent |
+| 结果通知 | message | Telegram/邮件通知 |
+| 数据清洗 | exec | Python 脚本处理 |
+
+**具体实现示例**
+
+```
+1. 网页爬取（简单）
+```bash
+exec: curl -s "https://example.com/companies" | pup 'div.company json{}'
+```
+
+2. 浏览器自动化（复杂页面）
+```
+browser(action="open", url="https://linkedin.com/search")
+browser(action="snapshot")  # 获取页面结构
+browser(action="act", kind="type", ref="search-box", text="科技公司")
+browser(action="act", kind="click", ref="search-button")
+browser(action="snapshot")  # 提取结果
+```
+
+3. API 调用
+```bash
+exec: curl -H "Authorization: Bearer $API_KEY" "https://api.example.com/companies"
+```
+
+4. 数据清洗脚本
+```python
+# ~/clawd/scripts/clean_data.py
+import json
+import sys
+
+def clean_record(record):
+    # 标准化处理
+    record['company_name'] = normalize_name(record.get('company_name', ''))
+    record['phone'] = normalize_phone(record.get('phone', ''))
+    record['email'] = normalize_email(record.get('email', '')).lower()
+    return record
+
+# 从 stdin 读取，处理后输出
+for line in sys.stdin:
+    record = json.loads(line)
+    cleaned = clean_record(record)
+    print(json.dumps(cleaned, ensure_ascii=False))
+```
+
+5. 增量更新检测
+```bash
+# 获取上次同步时间
+LAST_SYNC=$(cat ~/clawd/data/last_sync.txt)
+
+# 只获取更新的数据
+exec: curl "https://api.example.com/companies?updated_after=$LAST_SYNC"
+```
+
+#### 需要外部 API 的功能
+
+| 功能 | 推荐服务商 | 用途 |
+|-----|-----------|-----|
+| 企业工商信息 | 天眼查、企查查 | 验证企业真实性、获取基本信息 |
+| 邮箱验证 | Hunter、NeverBounce | 验证邮箱有效性 |
+| 手机号验证 | 阿里云短信、Twilio | 验证手机号有效性 |
+| IP 代理 | 快代理、芝麻代理 | 突破访问限制 |
+| 验证码识别 | 超级鹰、图鉴 | 处理验证码 |
+| LinkedIn 数据 | PhantomBuster、Proxycurl | 绕过 LinkedIn 限制 |
+| 新闻舆情 | 百度新闻 API、聚合数据 | 企业动态监控 |
+
+**API Key 管理建议**
+```bash
+# 存储在环境变量或本地配置
+~/clawd/config/api_keys.sh
+export TIANYANCHA_KEY="your-key"
+export HUNTER_KEY="your-key"
+export PROXY_KEY="your-key"
+
+# 使用时引用
+exec: curl -H "Authorization: $TIANYANCHA_KEY" "https://api.tianyancha.com/..."
+```
+
+#### OpenClaw 数据采集 Agent 架构
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                    OpenClaw 数据采集系统                    │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐            │
+│  │ Cron 触发 │───→│调度 Agent │───→│任务队列   │            │
+│  └──────────┘    └──────────┘    └────┬─────┘            │
+│                                        │                   │
+│                    ┌───────────────────┼──────────────────┐│
+│                    ↓                   ↓                  ↓│
+│            ┌──────────┐        ┌──────────┐       ┌──────────┐
+│            │爬虫 Agent│        │API Agent │       │清洗 Agent│
+│            │(browser) │        │  (exec)  │       │ (exec)  │
+│            └────┬─────┘        └────┬─────┘       └────┬─────┘
+│                 │                   │                  │     │
+│                 └───────────────────┴──────────────────┘     │
+│                                     │                        │
+│                              ┌──────↓──────┐                │
+│                              │  数据存储    │                │
+│                              │ (read/write) │                │
+│                              └──────┬──────┘                │
+│                                     │                        │
+│                              ┌──────↓──────┐                │
+│                              │  结果通知    │                │
+│                              │  (message)  │                │
+│                              └─────────────┘                │
+│                                                            │
+└────────────────────────────────────────────────────────────┘
+```
+
+**推荐实现路径**
+
+```
+阶段 1：基础采集（1-2 天）
+- 单页面爬取（exec + curl）
+- 简单 API 调用
+- 数据存储（JSON 文件）
+
+阶段 2：自动化（3-5 天）
+- Cron 定时任务
+- 浏览器自动化（browser tool）
+- 基础清洗脚本
+
+阶段 3：分布式（1-2 周）
+- sessions_spawn 多 Agent 并行
+- 增量更新机制
+- 质量监控
+
+阶段 4：智能优化（持续）
+- 自动重试与异常处理
+- 代理池管理
+- 数据质量评分
+```
+
+---
+
+### 5. 实践建议
+
+#### 数据采集合规清单
+
+```
+□ 检查目标网站 robots.txt
+□ 控制请求频率（建议 1-2 秒间隔）
+□ 设置合理的 User-Agent
+□ 不爬取个人隐私信息
+□ 不破坏目标网站正常服务
+□ 遵守数据使用目的限制
+□ 获取必要的数据使用授权
+```
+
+#### 数据质量保障机制
+
+```
+每日：
+- 检查采集任务执行状态
+- 处理失败任务
+- 抽检数据质量
+
+每周：
+- 全量数据质量报告
+- 清洗规则优化
+- 数据源效果评估
+
+每月：
+- 数据审计
+- 过期数据清理
+- 存储优化
+```
+
+#### 工具与服务商清单
+
+| 类别 | 工具/服务商 | 用途 |
+|-----|-----------|------|
+| 企业信息 | 天眼查、企查查、ZoomInfo | 企业数据 API |
+| 邮箱验证 | Hunter、NeverBounce | 邮箱有效性验证 |
+| 代理服务 | 快代理、芝麻代理 | 突破访问限制 |
+| 爬虫框架 | Scrapy、Playwright | 复杂页面采集 |
+| 数据处理 | Pandas、OpenRefine | 数据清洗 |
+| 数据存储 | SQLite、PostgreSQL | 本地/云端存储 |
+
+---
+
+*第5轮学习完成 - 2026-03-09*
