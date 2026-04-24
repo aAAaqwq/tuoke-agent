@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拓客智能体 - 产品原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { scrollbar-width: thin; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .sidebar-item:hover { background: rgba(59, 130, 246, 0.1); }
+        .sidebar-item.active { background: rgba(59, 130, 246, 0.15); border-right: 3px solid #3b82f6; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .progress-bar { transition: width 0.5s ease; }
+        .avatar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .tag-a { background: #dcfce7; color: #166534; }
+        .tag-b { background: #dbeafe; color: #1e40af; }
+        .tag-c { background: #fef3c7; color: #92400e; }
+        .tag-d { background: #f3f4f6; color: #6b7280; }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-soft { animation: pulse-soft 2s infinite; }
+        .funnel-step { position: relative; }
+        .funnel-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .funnel-step:last-child::after { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- 顶部导航 -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 fixed w-full z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">拓客智能体</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="relative p-2 text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-bell"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="flex items-center space-x-2 cursor-pointer">
+                    <div class="w-8 h-8 avatar rounded-full flex items-center justify-center text-white text-sm font-medium">张</div>
+                    <span class="text-sm text-gray-700">张经理</span>
+                    <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex pt-14">
+        <!-- 侧边栏 -->
+        <aside class="w-64 bg-white border-r border-gray-200 fixed h-full overflow-y-auto">
+            <div class="p-4">
+                <button onclick="showPage('dashboard')" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-lg flex items-center justify-center space-x-2 transition">
+                    <i class="fas fa-plus"></i>
+                    <span>新建活动</span>
+                </button>
+            </div>
+
+            <nav class="px-3 space-y-1">
+                <a href="#" onclick="showPage('dashboard')" class="sidebar-item active flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition" data-page="dashboard">
+                    <i class="fas fa-chart-line w-5 text-center"></i>
+                    <span>仪表盘</span>
+                </a>
+                <a href="#" onclick="showPage('prospects')" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition" data-page="prospects">
+                    <i class="fas fa-users w-5 text-center"></i>
+                    <span>线索管理</span>
+                    <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-0.5 rounded-full">156</span>
+                </a>
+                <a href="#" onclick="showPage('campaigns')" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition" data-page="campaigns">
+                    <i class="fas fa-bullseye w-5 text-center"></i>
+                    <span>活动管理</span>
+                </a>
+                <a href="#" onclick="showPage('profile')" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition" data-page="profile">
+                    <i class="fas fa-user-tie w-5 text-center"></i>
+                    <span>画像示例</span>
+                </a>
+                <a href="#" onclick="showPage('create')" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition" data-page="create">
+                    <i class="fas fa-plus-circle w-5 text-center"></i>
+                    <span>新建活动表单</span>
+                </a>
+
+                <div class="pt-4 pb-2">
+                    <div class="border-t border-gray-200"></div>
+                </div>
+
+                <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition">
+                    <i class="fas fa-file-alt w-5 text-center"></i>
+                    <span>报告中心</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition">
+                    <i class="fas fa-envelope w-5 text-center"></i>
+                    <span>触达记录</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-gray-700 transition">
+                    <i class="fas fa-cog w-5 text-center"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="flex-1 ml-64 p-6">
+
+            <!-- 仪表盘页面 -->
+            <div id="dashboard" class="page active">
+                <h1 class="text-2xl font-bold text-gray-800 mb-6">仪表盘</h1>
+
+                <!-- 统计卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 card-hover transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-gray-500 text-sm">总线索</span>
+                            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-users text-blue-500"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">1,234</div>
+                        <div class="text-sm text-green-600 mt-1">
+                            <i class="fas fa-arrow-up text-xs"></i> +56 今日新增
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 card-hover transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-gray-500 text-sm">已触达</span>
+                            <div class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-paper-plane text-purple-500"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">856</div>
+                        <div class="text-sm text-green-600 mt-1">
+                            <i class="fas fa-arrow-up text-xs"></i> +12 今日
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 card-hover transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-gray-500 text-sm">有回复</span>
+                            <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-reply text-green-500"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">123</div>
+                        <div class="text-sm text-green-600 mt-1">
+                            <i class="fas fa-arrow-up text-xs"></i> +5 今日
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 card-hover transition">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-gray-500 text-sm">成交数</span>
+                            <div class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-handshake text-amber-500"></i>
+                            </div>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">12</div>
+                        <div class="text-sm text-green-600 mt-1">
+                            <i class="fas fa-arrow-up text-xs"></i> +2 本月
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 活动进度和漏斗 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- 活动进度 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">活动进度</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-700">活动A: SaaS行业CTO采集</span>
+                                    <span class="text-blue-600 font-medium">80%</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full progress-bar" style="width: 80%"></div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">预计2小时后完成</div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-700">活动B: 制造业CIO触达</span>
+                                    <span class="text-purple-600 font-medium">60%</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-2">
+                                    <div class="bg-purple-500 h-2 rounded-full progress-bar" style="width: 60%"></div>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">进行中</div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-sm mb-2">
+                                    <span class="text-gray-700">活动C: 跨境电商画像生成</span>
+                                    <span class="text-green-600 font-medium">100%</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full progress-bar" style="width: 100%"></div>
+                                </div>
+                                <div class="text-xs text-green-600 mt-1">✓ 已完成</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 转化漏斗 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4">转化漏斗</h3>
+                        <div class="flex justify-between items-center">
+                            <div class="funnel-step text-center">
+                                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-blue-600 font-bold">100%</span>
+                                </div>
+                                <div class="text-xs text-gray-600">线索</div>
+                                <div class="text-sm font-semibold">1,234</div>
+                            </div>
+                            <div class="funnel-step text-center">
+                                <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-blue-600 font-bold text-sm">85%</span>
+                                </div>
+                                <div class="text-xs text-gray-600">触达</div>
+                                <div class="text-sm font-semibold">856</div>
+                            </div>
+                            <div class="funnel-step text-center">
+                                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-blue-600 font-bold text-xs">42%</span>
+                                </div>
+                                <div class="text-xs text-gray-600">打开</div>
+                                <div class="text-sm font-semibold">518</div>
+                            </div>
+                            <div class="funnel-step text-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-blue-600 font-bold text-xs">10%</span>
+                                </div>
+                                <div class="text-xs text-gray-600">回复</div>
+                                <div class="text-sm font-semibold">123</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                                    <span class="text-green-600 font-bold text-xs">3%</span>
+                                </div>
+                                <div class="text-xs text-gray-600">成交</div>
+                                <div class="text-sm font-semibold">12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近动态 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">最近动态</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i class="fas fa-download text-blue-600 text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-800">活动A采集完成，新增线索<span class="font-semibold text-blue-600">156条</span></div>
+                                <div class="text-xs text-gray-500 mt-1">10:23</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i class="fas fa-reply text-green-600 text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-800"><span class="font-medium">张三</span>回复了邮件，标记为"有兴趣"</div>
+                                <div class="text-xs text-gray-500 mt-1">09:45</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
+                            <div class="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i class="fas fa-pause text-amber-600 text-xs"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-sm text-gray-800">活动B触达任务暂停（达到日限额）</div>
+                                <div class="text-xs text-gray-500 mt-1">09:12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 线索管理页面 -->
+            <div id="prospects" class="page">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">线索管理</h1>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                        <i class="fas fa-plus"></i>
+                        <span>新建线索</span>
+                    </button>
+                </div>
+
+                <!-- 筛选栏 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-4">
+                    <div class="flex flex-wrap gap-3">
+                        <div class="relative">
+                            <input type="text" placeholder="搜索姓名、公司、职位..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        <select class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>所有行业</option>
+                            <option>SaaS</option>
+                            <option>制造业</option>
+                            <option>电商</option>
+                        </select>
+                        <select class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>所有评分</option>
+                            <option>A级 (80-100)</option>
+                            <option>B级 (60-79)</option>
+                            <option>C级 (40-59)</option>
+                        </select>
+                        <select class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>所有状态</option>
+                            <option>新线索</option>
+                            <option>已触达</option>
+                            <option>有回复</option>
+                        </select>
+                        <button class="ml-auto text-gray-600 hover:text-gray-800 flex items-center space-x-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+                            <i class="fas fa-download"></i>
+                            <span>导出 CSV</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 线索列表 -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-4 py-3 text-left">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                </th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">姓名</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">公司</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">职位</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">评分</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">状态</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">张</div>
+                                        <div>
+                                            <div class="font-medium text-gray-800">张三</div>
+                                            <div class="text-xs text-gray-500">zhangsan@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">某某科技有限公司</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">CTO</td>
+                                <td class="px-4 py-3">
+                                    <span class="tag-a px-2 py-1 rounded-full text-xs font-medium">A (92)</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">新线索</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button onclick="showPage('profile')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">查看画像</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-medium">李</div>
+                                        <div>
+                                            <div class="font-medium text-gray-800">李四</div>
+                                            <div class="text-xs text-gray-500">lisi@abc.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">ABC公司</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">VP Engineering</td>
+                                <td class="px-4 py-3">
+                                    <span class="tag-a px-2 py-1 rounded-full text-xs font-medium">A (85)</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">已触达</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">查看画像</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-sm font-medium">王</div>
+                                        <div>
+                                            <div class="font-medium text-gray-800">王五</div>
+                                            <div class="text-xs text-gray-500">wangwu@innov.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">创新企业</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">技术总监</td>
+                                <td class="px-4 py-3">
+                                    <span class="tag-b px-2 py-1 rounded-full text-xs font-medium">B (78)</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs">有回复</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">查看画像</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" class="rounded border-gray-300">
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center text-white text-sm font-medium">赵</div>
+                                        <div>
+                                            <div class="font-medium text-gray-800">赵六</div>
+                                            <div class="text-xs text-gray-500">zhaoliu@trad.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">传统企业</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">IT经理</td>
+                                <td class="px-4 py-3">
+                                    <span class="tag-b px-2 py-1 rounded-full text-xs font-medium">B (65)</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">已触达</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">查看画像</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 分页 -->
+                    <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
+                        <div class="text-sm text-gray-500">共 156 条</div>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-3 py-1 border border-gray-200 rounded hover:bg-gray-50 text-sm">&lt;</button>
+                            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
+                            <button class="px-3 py-1 border border-gray-200 rounded hover:bg-gray-50 text-sm">2</button>
+                            <button class="px-3 py-1 border border-gray-200 rounded hover:bg-gray-50 text-sm">3</button>
+                            <span class="text-gray-400">...</span>
+                            <button class="px-3 py-1 border border-gray-200 rounded hover:bg-gray-50 text-sm">10</button>
+                            <button class="px-3 py-1 border border-gray-200 rounded hover:bg-gray-50 text-sm">&gt;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 画像详情页面 -->
+            <div id="profile" class="page">
+                <!-- 返回按钮 -->
+                <button onclick="showPage('prospects')" class="mb-4 text-gray-600 hover:text-gray-800 flex items-center space-x-2">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>返回线索列表</span>
+                </button>
+
+                <!-- 头部信息卡片 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-medium">张</div>
+                            <div>
+                                <div class="flex items-center space-x-3">
+                                    <h1 class="text-2xl font-bold text-gray-800">张三</h1>
+                                    <span class="tag-a px-3 py-1 rounded-full text-sm font-medium">A级 (92分)</span>
+                                    <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded-full text-xs flex items-center">
+                                        <i class="fas fa-star mr-1"></i>优先跟进
+                                    </span>
+                                </div>
+                                <div class="text-gray-600 mt-1">CTO @ 某某科技有限公司</div>
+                                <div class="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+                                    <span><i class="fas fa-envelope mr-1"></i>zhangsan@example.com</span>
+                                    <span><i class="fas fa-phone mr-1"></i>138****1234</span>
+                                    <span><i class="fas fa-map-marker-alt mr-1"></i>北京</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center space-x-2 transition">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>立即触达</span>
+                            </button>
+                            <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg flex items-center space-x-2 transition">
+                                <i class="fas fa-calendar"></i>
+                                <span>预约跟进</span>
+                            </button>
+                            <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg flex items-center space-x-2 transition">
+                                <i class="fas fa-edit"></i>
+                                <span>编辑画像</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 画像详情网格 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- 角色特征 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-user-tag text-blue-500 mr-2"></i>角色特征
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="text-sm text-gray-500 mb-1">决策级别</div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">高</span>
+                                    <span class="text-sm text-gray-600">最终决策人</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-500 mb-2">关注重点</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">技术架构</span>
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">团队效率</span>
+                                    <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm">成本控制</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-500 mb-2">可能KPI</div>
+                                <ul class="text-sm text-gray-700 space-y-1">
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 text-xs"></i>研发交付速度</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 text-xs"></i>系统稳定性</li>
+                                    <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2 text-xs"></i>团队留存率</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 需求分析 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-lightbulb text-amber-500 mr-2"></i>需求分析
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="text-sm text-gray-500 mb-2">潜在痛点</div>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start">
+                                        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">1</span>
+                                        <span class="text-sm text-gray-700">数据孤岛，系统间不互通</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">2</span>
+                                        <span class="text-sm text-gray-700">研发效率低，交付周期长</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <span class="w-5 h-5 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xs mr-2 mt-0.5">3</span>
+                                        <span class="text-sm text-gray-700">人才流失，招聘困难</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100">
+                                <div class="text-sm text-gray-500 mb-1">购买动机</div>
+                                <div class="text-sm text-gray-700">提升效率、降低成本</div>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100">
+                                <div class="text-sm text-gray-500 mb-1">预期方案</div>
+                                <div class="text-sm text-gray-700">DevOps平台、协作工具</div>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100">
+                                <div class="text-sm text-gray-500 mb-1">预算指标</div>
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">高 (公司有融资)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 触达建议 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-paper-plane text-purple-500 mr-2"></i>触达建议
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">推荐渠道</span>
+                                <span class="flex items-center text-sm font-medium text-gray-700">
+                                    <i class="fas fa-envelope text-blue-500 mr-2"></i>邮件
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">沟通风格</span>
+                                <span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">专业严谨</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">最佳时间</span>
+                                <span class="flex items-center text-sm text-gray-700">
+                                    <i class="fas fa-sun text-amber-500 mr-2"></i>上午 9:00-11:00
+                                </span>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100">
+                                <div class="text-sm text-gray-500 mb-2">推荐话题</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">技术架构升级</span>
+                                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">团队效能提升</span>
+                                    <span class="px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm">同类客户案例</span>
+                                </div>
+                            </div>
+                            <div class="pt-3 border-t border-gray-100">
+                                <div class="text-sm text-gray-500 mb-2">避免话题</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-sm">价格谈判</span>
+                                    <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-sm">过多产品功能</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 互动历史 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-history text-gray-500 mr-2"></i>互动历史
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-envelope text-blue-600 text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-800">发送介绍邮件</span>
+                                        <span class="px-2 py-0.5 bg-green-100 text-green-600 rounded text-xs">已打开</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">2026-04-20 10:30</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-file-alt text-purple-600 text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-800">发送案例邮件</span>
+                                        <span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">未打开</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">2026-04-22 14:00</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fab fa-weixin text-green-600 text-xs"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-800">企微好友请求</span>
+                                        <span class="px-2 py-0.5 bg-amber-100 text-amber-600 rounded text-xs">待通过</span>
+                                    </div>
+                                    <div class="text-xs text-gray-500 mt-1">2026-04-24 09:15</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新建活动页面 -->
+            <div id="create" class="page">
+                <div class="max-w-4xl">
+                    <h1 class="text-2xl font-bold text-gray-800 mb-6">新建拓客活动</h1>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
+                        <!-- 基本信息 -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">基本信息</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        活动名称 <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" placeholder="输入活动名称，如：SaaS行业CTO采集" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">活动描述</label>
+                                    <textarea placeholder="输入活动描述（可选）..." rows="3" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 目标客户定义 -->
+                        <div class="pt-6 border-t border-gray-100">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">目标客户定义</h3>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        行业 <span class="text-red-500">*</span>
+                                    </label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">SaaS</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">云计算</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">制造业</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">电商</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">+ 更多</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">公司规模</label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">50-200人</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">200-500人</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">500-1000人</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">1000人以上</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        目标职位 <span class="text-red-500">*</span>
+                                    </label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">CTO</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">VP Engineering</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">技术总监</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">架构师</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">+ 添加</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">地区</label>
+                                    <div class="flex flex-wrap gap-2">
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">北京</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">上海</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">深圳</button>
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">杭州</button>
+                                        <button class="px-4 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-sm">+ 更多</button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">线索数量</label>
+                                    <div class="flex items-center space-x-3">
+                                        <input type="number" value="100" class="w-24 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <span class="text-sm text-gray-500">条（推荐50-500条）</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 数据源配置 -->
+                        <div class="pt-6 border-t border-gray-100">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">数据源配置</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                    <input type="checkbox" checked class="rounded text-blue-600">
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-800">企查查API（优先）</div>
+                                        <div class="text-sm text-gray-500">数据最全，覆盖2.5亿+企业</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                    <input type="checkbox" checked class="rounded text-blue-600">
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-800">天眼查API</div>
+                                        <div class="text-sm text-gray-500">补充司法风险和舆情数据</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                    <input type="checkbox" class="rounded text-blue-600">
+                                    <div class="flex-1">
+                                        <div class="font-medium text-gray-800">用户导入数据</div>
+                                        <div class="text-sm text-gray-500">使用已有的CSV/Excel数据</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 触达设置 -->
+                        <div class="pt-6 border-t border-gray-100">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">触达设置（可选）</h3>
+                            <div class="space-y-4">
+                                <label class="flex items-center space-x-3">
+                                    <input type="checkbox" class="rounded text-blue-600">
+                                    <span class="text-gray-700">开启自动触达</span>
+                                </label>
+                                <div class="pl-6 space-y-3">
+                                    <div>
+                                        <label class="block text-sm text-gray-500 mb-2">选择模板</label>
+                                        <select class="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                                            <option>选择邮件模板...</option>
+                                            <option>SaaS行业介绍模板</option>
+                                            <option>制造业解决方案模板</option>
+                                            <option>通用B2B模板</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm text-gray-500 mb-2">日发送上限</label>
+                                        <div class="flex items-center space-x-3">
+                                            <input type="number" value="50" class="w-24 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <span class="text-sm text-gray-500">封/天</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="pt-6 border-t border-gray-100 flex items-center justify-end space-x-4">
+                            <button class="px-6 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg transition">
+                                取消
+                            </button>
+                            <button class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                                创建活动
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活动管理页面 -->
+            <div id="campaigns" class="page">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">活动管理</h1>
+                    <button onclick="showPage('create')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition">
+                        <i class="fas fa-plus"></i>
+                        <span>新建活动</span>
+                    </button>
+                </div>
+
+                <!-- 活动卡片列表 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 活动卡片 1 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden card-hover transition">
+                        <div class="p-5">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">SaaS行业CTO采集</h3>
+                                    <p class="text-sm text-gray-500 mt-1">2026-04-20 创建</p>
+                                </div>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs">进行中</span>
+                            </div>
+
+                            <div class="space-y-3 mb-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-500">总体进度</span>
+                                        <span class="text-blue-600 font-medium">80%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-gray-500"><i class="fas fa-users mr-1"></i>156条线索</span>
+                                        <span class="text-gray-500"><i class="fas fa-paper-plane mr-1"></i>120已触达</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition">
+                                    <i class="fas fa-play mr-1"></i>继续
+                                </button>
+                                <button class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-600 transition">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                                <button class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-600 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>预计2小时后完成</span>
+                                <span>阶段: 画像生成中</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 活动卡片 2 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden card-hover transition">
+                        <div class="p-5">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">制造业CIO触达</h3>
+                                    <p class="text-sm text-gray-500 mt-1">2026-04-18 创建</p>
+                                </div>
+                                <span class="px-2 py-1 bg-purple-100 text-purple-600 rounded-full text-xs">进行中</span>
+                            </div>
+
+                            <div class="space-y-3 mb-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-500">总体进度</span>
+                                        <span class="text-purple-600 font-medium">60%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-gray-500"><i class="fas fa-users mr-1"></i>89条线索</span>
+                                        <span class="text-gray-500"><i class="fas fa-paper-plane mr-1"></i>45已触达</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button class="flex-1 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition">
+                                    <i class="fas fa-play mr-1"></i>继续
+                                </button>
+                                <button class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-600 transition">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                                <button class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-600 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>进行中</span>
+                                <span>阶段: 触达执行中</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 活动卡片 3 -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden card-hover transition">
+                        <div class="p-5">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">跨境电商画像生成</h3>
+                                    <p class="text-sm text-gray-500 mt-1">2026-04-15 创建</p>
+                                </div>
+                                <span class="px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs">已完成</span>
+                            </div>
+
+                            <div class="space-y-3 mb-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-gray-500">总体进度</span>
+                                        <span class="text-green-600 font-medium">100%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center justify-between text-sm">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-gray-500"><i class="fas fa-users mr-1"></i>234条线索</span>
+                                        <span class="text-gray-500"><i class="fas fa-check mr-1"></i>全部完成</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button class="flex-1 py-2 border border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg text-sm transition">
+                                    <i class="fas fa-eye mr-1"></i>查看报告
+                                </button>
+                                <button class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-600 transition">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="px-3 py-2 border border-gray-200 hover:bg-gray-50 rounded-lg text-gray-600 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="px-5 py-3 bg-gray-50 border-t border-gray-100">
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>2026-04-19 完成</span>
+                                <span class="text-green-600">✓ 已完成</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // 页面切换功能
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+
+            // 更新侧边栏激活状态
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageId) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // 模拟实时数据更新
+        setInterval(() => {
+            const pulseElements = document.querySelectorAll('.animate-pulse-soft');
+            pulseElements.forEach(el => {
+                el.style.opacity = Math.random() > 0.5 ? '1' : '0.7';
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

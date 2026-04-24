@@ -1,0 +1,101 @@
+company_name,website,contact_email,region,industry,role
+深圳SaaS样本企业001,sample-001.example.com,owner+001@sample-001.example.com,深圳,SaaS,CTO
+广州跨境电商样本企业002,sample-002.example.com,owner+002@sample-002.example.com,广州,跨境电商,技术副总裁
+杭州AI 服务样本企业003,sample-003.example.com,owner+003@sample-003.example.com,杭州,AI 服务,创始人
+上海企业服务样本企业004,sample-004.example.com,owner+004@sample-004.example.com,上海,企业服务,销售总监
+北京SaaS样本企业005,sample-005.example.com,owner+005@sample-005.example.com,北京,SaaS,运营负责人
+深圳跨境电商样本企业006,sample-006.example.com,owner+006@sample-006.example.com,深圳,跨境电商,CTO
+广州AI 服务样本企业007,sample-007.example.com,owner+007@sample-007.example.com,广州,AI 服务,技术副总裁
+杭州企业服务样本企业008,sample-008.example.com,owner+008@sample-008.example.com,杭州,企业服务,创始人
+上海SaaS样本企业009,sample-009.example.com,owner+009@sample-009.example.com,上海,SaaS,销售总监
+北京跨境电商样本企业010,sample-010.example.com,owner+010@sample-010.example.com,北京,跨境电商,运营负责人
+深圳AI 服务样本企业011,sample-011.example.com,owner+011@sample-011.example.com,深圳,AI 服务,CTO
+广州企业服务样本企业012,sample-012.example.com,owner+012@sample-012.example.com,广州,企业服务,技术副总裁
+杭州SaaS样本企业013,sample-013.example.com,owner+013@sample-013.example.com,杭州,SaaS,创始人
+上海跨境电商样本企业014,sample-014.example.com,owner+014@sample-014.example.com,上海,跨境电商,销售总监
+北京AI 服务样本企业015,sample-015.example.com,owner+015@sample-015.example.com,北京,AI 服务,运营负责人
+深圳企业服务样本企业016,sample-016.example.com,owner+016@sample-016.example.com,深圳,企业服务,CTO
+广州SaaS样本企业017,sample-017.example.com,owner+017@sample-017.example.com,广州,SaaS,技术副总裁
+杭州跨境电商样本企业018,sample-018.example.com,owner+018@sample-018.example.com,杭州,跨境电商,创始人
+上海AI 服务样本企业019,sample-019.example.com,owner+019@sample-019.example.com,上海,AI 服务,销售总监
+北京企业服务样本企业020,sample-020.example.com,owner+020@sample-020.example.com,北京,企业服务,运营负责人
+深圳SaaS样本企业021,sample-021.example.com,owner+021@sample-021.example.com,深圳,SaaS,CTO
+广州跨境电商样本企业022,sample-022.example.com,owner+022@sample-022.example.com,广州,跨境电商,技术副总裁
+杭州AI 服务样本企业023,sample-023.example.com,owner+023@sample-023.example.com,杭州,AI 服务,创始人
+上海企业服务样本企业024,sample-024.example.com,owner+024@sample-024.example.com,上海,企业服务,销售总监
+北京SaaS样本企业025,sample-025.example.com,owner+025@sample-025.example.com,北京,SaaS,运营负责人
+深圳跨境电商样本企业026,sample-026.example.com,owner+026@sample-026.example.com,深圳,跨境电商,CTO
+广州AI 服务样本企业027,sample-027.example.com,owner+027@sample-027.example.com,广州,AI 服务,技术副总裁
+杭州企业服务样本企业028,sample-028.example.com,owner+028@sample-028.example.com,杭州,企业服务,创始人
+上海SaaS样本企业029,sample-029.example.com,owner+029@sample-029.example.com,上海,SaaS,销售总监
+北京跨境电商样本企业030,sample-030.example.com,owner+030@sample-030.example.com,北京,跨境电商,运营负责人
+深圳AI 服务样本企业031,sample-031.example.com,owner+031@sample-031.example.com,深圳,AI 服务,CTO
+广州企业服务样本企业032,sample-032.example.com,owner+032@sample-032.example.com,广州,企业服务,技术副总裁
+杭州SaaS样本企业033,sample-033.example.com,owner+033@sample-033.example.com,杭州,SaaS,创始人
+上海跨境电商样本企业034,sample-034.example.com,owner+034@sample-034.example.com,上海,跨境电商,销售总监
+北京AI 服务样本企业035,sample-035.example.com,owner+035@sample-035.example.com,北京,AI 服务,运营负责人
+深圳企业服务样本企业036,sample-036.example.com,owner+036@sample-036.example.com,深圳,企业服务,CTO
+广州SaaS样本企业037,sample-037.example.com,owner+037@sample-037.example.com,广州,SaaS,技术副总裁
+杭州跨境电商样本企业038,sample-038.example.com,owner+038@sample-038.example.com,杭州,跨境电商,创始人
+上海AI 服务样本企业039,sample-039.example.com,owner+039@sample-039.example.com,上海,AI 服务,销售总监
+北京企业服务样本企业040,sample-040.example.com,owner+040@sample-040.example.com,北京,企业服务,运营负责人
+深圳SaaS样本企业041,sample-041.example.com,owner+041@sample-041.example.com,深圳,SaaS,CTO
+广州跨境电商样本企业042,sample-042.example.com,owner+042@sample-042.example.com,广州,跨境电商,技术副总裁
+杭州AI 服务样本企业043,sample-043.example.com,owner+043@sample-043.example.com,杭州,AI 服务,创始人
+上海企业服务样本企业044,sample-044.example.com,owner+044@sample-044.example.com,上海,企业服务,销售总监
+北京SaaS样本企业045,sample-045.example.com,owner+045@sample-045.example.com,北京,SaaS,运营负责人
+深圳跨境电商样本企业046,sample-046.example.com,owner+046@sample-046.example.com,深圳,跨境电商,CTO
+广州AI 服务样本企业047,sample-047.example.com,owner+047@sample-047.example.com,广州,AI 服务,技术副总裁
+杭州企业服务样本企业048,sample-048.example.com,owner+048@sample-048.example.com,杭州,企业服务,创始人
+上海SaaS样本企业049,sample-049.example.com,owner+049@sample-049.example.com,上海,SaaS,销售总监
+北京跨境电商样本企业050,sample-050.example.com,owner+050@sample-050.example.com,北京,跨境电商,运营负责人
+深圳AI 服务样本企业051,sample-051.example.com,owner+051@sample-051.example.com,深圳,AI 服务,CTO
+广州企业服务样本企业052,sample-052.example.com,owner+052@sample-052.example.com,广州,企业服务,技术副总裁
+杭州SaaS样本企业053,sample-053.example.com,owner+053@sample-053.example.com,杭州,SaaS,创始人
+上海跨境电商样本企业054,sample-054.example.com,owner+054@sample-054.example.com,上海,跨境电商,销售总监
+北京AI 服务样本企业055,sample-055.example.com,owner+055@sample-055.example.com,北京,AI 服务,运营负责人
+深圳企业服务样本企业056,sample-056.example.com,owner+056@sample-056.example.com,深圳,企业服务,CTO
+广州SaaS样本企业057,sample-057.example.com,owner+057@sample-057.example.com,广州,SaaS,技术副总裁
+杭州跨境电商样本企业058,sample-058.example.com,owner+058@sample-058.example.com,杭州,跨境电商,创始人
+上海AI 服务样本企业059,sample-059.example.com,owner+059@sample-059.example.com,上海,AI 服务,销售总监
+北京企业服务样本企业060,sample-060.example.com,owner+060@sample-060.example.com,北京,企业服务,运营负责人
+深圳SaaS样本企业061,sample-061.example.com,owner+061@sample-061.example.com,深圳,SaaS,CTO
+广州跨境电商样本企业062,sample-062.example.com,owner+062@sample-062.example.com,广州,跨境电商,技术副总裁
+杭州AI 服务样本企业063,sample-063.example.com,owner+063@sample-063.example.com,杭州,AI 服务,创始人
+上海企业服务样本企业064,sample-064.example.com,owner+064@sample-064.example.com,上海,企业服务,销售总监
+北京SaaS样本企业065,sample-065.example.com,owner+065@sample-065.example.com,北京,SaaS,运营负责人
+深圳跨境电商样本企业066,sample-066.example.com,owner+066@sample-066.example.com,深圳,跨境电商,CTO
+广州AI 服务样本企业067,sample-067.example.com,owner+067@sample-067.example.com,广州,AI 服务,技术副总裁
+杭州企业服务样本企业068,sample-068.example.com,owner+068@sample-068.example.com,杭州,企业服务,创始人
+上海SaaS样本企业069,sample-069.example.com,owner+069@sample-069.example.com,上海,SaaS,销售总监
+北京跨境电商样本企业070,sample-070.example.com,owner+070@sample-070.example.com,北京,跨境电商,运营负责人
+深圳AI 服务样本企业071,sample-071.example.com,owner+071@sample-071.example.com,深圳,AI 服务,CTO
+广州企业服务样本企业072,sample-072.example.com,owner+072@sample-072.example.com,广州,企业服务,技术副总裁
+杭州SaaS样本企业073,sample-073.example.com,owner+073@sample-073.example.com,杭州,SaaS,创始人
+上海跨境电商样本企业074,sample-074.example.com,owner+074@sample-074.example.com,上海,跨境电商,销售总监
+北京AI 服务样本企业075,sample-075.example.com,owner+075@sample-075.example.com,北京,AI 服务,运营负责人
+深圳企业服务样本企业076,sample-076.example.com,owner+076@sample-076.example.com,深圳,企业服务,CTO
+广州SaaS样本企业077,sample-077.example.com,owner+077@sample-077.example.com,广州,SaaS,技术副总裁
+杭州跨境电商样本企业078,sample-078.example.com,owner+078@sample-078.example.com,杭州,跨境电商,创始人
+上海AI 服务样本企业079,sample-079.example.com,owner+079@sample-079.example.com,上海,AI 服务,销售总监
+北京企业服务样本企业080,sample-080.example.com,owner+080@sample-080.example.com,北京,企业服务,运营负责人
+深圳SaaS样本企业081,sample-081.example.com,owner+081@sample-081.example.com,深圳,SaaS,CTO
+广州跨境电商样本企业082,sample-082.example.com,owner+082@sample-082.example.com,广州,跨境电商,技术副总裁
+杭州AI 服务样本企业083,sample-083.example.com,owner+083@sample-083.example.com,杭州,AI 服务,创始人
+上海企业服务样本企业084,sample-084.example.com,owner+084@sample-084.example.com,上海,企业服务,销售总监
+北京SaaS样本企业085,sample-085.example.com,owner+085@sample-085.example.com,北京,SaaS,运营负责人
+深圳跨境电商样本企业086,sample-086.example.com,owner+086@sample-086.example.com,深圳,跨境电商,CTO
+广州AI 服务样本企业087,sample-087.example.com,owner+087@sample-087.example.com,广州,AI 服务,技术副总裁
+杭州企业服务样本企业088,sample-088.example.com,owner+088@sample-088.example.com,杭州,企业服务,创始人
+上海SaaS样本企业089,sample-089.example.com,owner+089@sample-089.example.com,上海,SaaS,销售总监
+北京跨境电商样本企业090,sample-090.example.com,owner+090@sample-090.example.com,北京,跨境电商,运营负责人
+深圳AI 服务样本企业091,sample-091.example.com,owner+091@sample-091.example.com,深圳,AI 服务,CTO
+广州企业服务样本企业092,sample-092.example.com,owner+092@sample-092.example.com,广州,企业服务,技术副总裁
+杭州SaaS样本企业093,sample-093.example.com,owner+093@sample-093.example.com,杭州,SaaS,创始人
+上海跨境电商样本企业094,sample-094.example.com,owner+094@sample-094.example.com,上海,跨境电商,销售总监
+北京AI 服务样本企业095,sample-095.example.com,owner+095@sample-095.example.com,北京,AI 服务,运营负责人
+深圳企业服务样本企业096,sample-096.example.com,owner+096@sample-096.example.com,深圳,企业服务,CTO
+广州SaaS样本企业097,sample-097.example.com,owner+097@sample-097.example.com,广州,SaaS,技术副总裁
+杭州跨境电商样本企业098,sample-098.example.com,owner+098@sample-098.example.com,杭州,跨境电商,创始人
+上海AI 服务样本企业099,sample-099.example.com,owner+099@sample-099.example.com,上海,AI 服务,销售总监
+北京企业服务样本企业100,sample-100.example.com,owner+100@sample-100.example.com,北京,企业服务,运营负责人

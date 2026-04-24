@@ -11,3 +11,14 @@
 # Temporary files
 *.tmp
 *.bak
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# Node.js
+node_modules/
+.next/
+coverage/
